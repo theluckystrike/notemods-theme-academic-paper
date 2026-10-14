@@ -125,36 +125,20 @@ body {
   margin-bottom: 0.5em;
 }
 
-/* Numbered sections: h2 = "1  Title", h3 = "1.1  Title" */
-.markdown-preview-view { counter-reset: ap-h2 ap-h3; }
+/* Heading hierarchy without generated numbers: virtualized notes must preserve authored text. */
 .markdown-preview-view h2,
 .markdown-source-view.mod-cm6 .HyperMD-header-2 {
   font-size: 1.25em;
   font-weight: 700;
 }
 .markdown-preview-view h2 {
-  counter-reset: ap-h3;
-  counter-increment: ap-h2;
   margin-top: var(--ap-section-gap);
-}
-.markdown-preview-view h2::before {
-  content: counter(ap-h2) ".\00a0\00a0";
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
 }
 .markdown-preview-view h3,
 .markdown-source-view.mod-cm6 .HyperMD-header-3 {
   font-size: 1.06em;
   font-weight: 600;
   font-style: italic;
-}
-.markdown-preview-view h3 {
-  counter-increment: ap-h3;
-}
-.markdown-preview-view h3::before {
-  content: counter(ap-h2) "." counter(ap-h3) "\00a0\00a0";
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
 }
 .markdown-preview-view h4,
 .markdown-source-view.mod-cm6 .HyperMD-header-4 {
