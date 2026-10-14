@@ -1,0 +1,355 @@
+/* Academic Paper — print-journal typesetting for Obsidian
+   Original CSS, MIT License. Author: U4 Research Desk, 2026.
+   Design system: serif reading, centred small-caps title, CSS-counter
+   section numbering, booktabs-style ruled tables, footnote-style links. */
+
+:root {
+  /* Named design tokens (prefix: --ap-*) */
+  --ap-rule-strong: #3a3a3a;
+  --ap-rule-light: #c9c9c9;
+  --ap-caption-size: 0.82em;
+  --ap-accent: #8a1f2d;         /* oxblood, light mode */
+  --ap-accent-dark: #d98f99;    /* rose, dark mode */
+  --ap-section-gap: 2.2rem;
+  --ap-serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --ap-sans: -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --ap-mono: 'SF Mono', Menlo, Consolas, monospace;
+  --ap-focus-ring: #4a7dbd;
+}
+
+/* ---------- Dark mode ---------- */
+.theme-dark {
+  --background-primary: #1b1a17;
+  --background-primary-alt: #211f1c;
+  --background-secondary: #161513;
+  --background-secondary-alt: #121110;
+  --background-modifier-border: #38352f;
+  --background-modifier-border-hover: #4a463e;
+  --background-modifier-border-focus: var(--ap-focus-ring);
+  --text-normal: #ddd8cf;
+  --text-muted: #a39c8f;
+  --text-faint: #7a7367;
+  --text-accent: var(--ap-accent-dark);
+  --text-accent-hover: #e8b0b8;
+  --interactive-accent: var(--ap-accent-dark);
+  --interactive-accent-hover: #e8b0b8;
+  --ap-rule-strong: #8f887b;
+  --ap-rule-light: #3c3934;
+  --ap-accent-current: var(--ap-accent-dark);
+  --h1-color: #eae4d9;
+  --h2-color: #e2dbcf;
+  --inline-title-color: #eae4d9;
+  --code-normal: #ddd8cf;
+  --code-background: #26241f;
+  --table-header-background: #211f1c;
+  --table-row-even-bg: #1e1c19;
+  --table-row-odd-bg: #1b1a17;
+  --link-color: var(--ap-accent-dark);
+  --link-unresolved-color: #a39c8f;
+  --nav-item-color: #c9c3b8;
+  --nav-item-background-hover: #26241f;
+  --nav-item-background-active: #2e2b26;
+  --tab-text-color: #a39c8f;
+  --tab-text-color-focused: #eae4d9;
+  --tab-outline-color: #38352f;
+}
+
+/* ---------- Light mode ---------- */
+.theme-light {
+  --background-primary: #fbfaf7;
+  --background-primary-alt: #f4f1ea;
+  --background-secondary: #f1eee6;
+  --background-secondary-alt: #e9e5da;
+  --background-modifier-border: #d8d3c6;
+  --background-modifier-border-hover: #c4beb0;
+  --background-modifier-border-focus: var(--ap-focus-ring);
+  --text-normal: #26241f;
+  --text-muted: #5f5a4f;
+  --text-faint: #8f887a;
+  --text-accent: var(--ap-accent);
+  --text-accent-hover: #6d1722;
+  --interactive-accent: var(--ap-accent);
+  --interactive-accent-hover: #6d1722;
+  --ap-accent-current: var(--ap-accent);
+  --h1-color: #1e1c18;
+  --h2-color: #2b2822;
+  --inline-title-color: #1e1c18;
+  --code-background: #f0ede4;
+  --table-header-background: #f1eee6;
+  --table-row-even-bg: #fbfaf7;
+  --table-row-odd-bg: #f4f1ea;
+  --link-color: var(--ap-accent);
+  --link-unresolved-color: #8f887a;
+  --nav-item-color: #4c4740;
+  --nav-item-background-hover: #ece8dd;
+  --nav-item-background-active: #e2ddcf;
+  --tab-text-color: #5f5a4f;
+  --tab-text-color-focused: #1e1c18;
+  --tab-outline-color: #d8d3c6;
+}
+
+/* ---------- Base typography ---------- */
+body {
+  --font-text-theme: var(--ap-serif);
+  --font-interface-theme: var(--ap-sans);
+  --font-monospace-theme: var(--ap-mono);
+  --line-height-normal: 1.65;
+  --p-spacing: 0.95em;
+  --heading-spacing: 2.2em 0.8em;
+}
+
+/* ---------- Title & headings ---------- */
+.inline-title {
+  font-family: var(--ap-serif);
+  text-align: center;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 2.05em;
+  font-weight: 600;
+  border-bottom: 1px solid var(--ap-rule-strong);
+  padding-bottom: 0.4em;
+  margin-bottom: 1.2em;
+}
+
+/* Level-1 heading: centred small-caps style. The uppercase + tracking treatment
+   is optically smaller than mixed-case text at the same size, so H1 is set well
+   above H2 so the visual hierarchy is H1 > H2 > H3 by size and weight. */
+.markdown-preview-view h1,
+.markdown-source-view.mod-cm6 .HyperMD-header-1 {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 1.7em;
+  font-weight: 700;
+  text-align: center;
+  margin-top: var(--ap-section-gap);
+  margin-bottom: 0.5em;
+}
+
+/* Numbered sections: h2 = "1  Title", h3 = "1.1  Title" */
+.markdown-preview-view { counter-reset: ap-h2 ap-h3; }
+.markdown-preview-view h2,
+.markdown-source-view.mod-cm6 .HyperMD-header-2 {
+  font-size: 1.25em;
+  font-weight: 700;
+}
+.markdown-preview-view h2 {
+  counter-reset: ap-h3;
+  counter-increment: ap-h2;
+  margin-top: var(--ap-section-gap);
+}
+.markdown-preview-view h2::before {
+  content: counter(ap-h2) ".\00a0\00a0";
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.markdown-preview-view h3,
+.markdown-source-view.mod-cm6 .HyperMD-header-3 {
+  font-size: 1.06em;
+  font-weight: 600;
+  font-style: italic;
+}
+.markdown-preview-view h3 {
+  counter-increment: ap-h3;
+}
+.markdown-preview-view h3::before {
+  content: counter(ap-h2) "." counter(ap-h3) "\00a0\00a0";
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.markdown-preview-view h4,
+.markdown-source-view.mod-cm6 .HyperMD-header-4 {
+  font-size: 0.99em;
+  font-weight: 600;
+}
+.markdown-preview-view h5,
+.markdown-source-view.mod-cm6 .HyperMD-header-5 {
+  font-size: 0.94em;
+  font-weight: 600;
+}
+.markdown-preview-view h6,
+.markdown-source-view.mod-cm6 .HyperMD-header-6 {
+  font-family: var(--ap-sans);
+  font-size: 0.86em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* ---------- Booktabs tables ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.4em 0;
+  font-size: 0.95em;
+}
+thead {
+  border-top: 2px solid var(--ap-rule-strong);
+  border-bottom: 1px solid var(--ap-rule-strong);
+}
+tbody { border-bottom: 2px solid var(--ap-rule-strong); }
+th {
+  font-family: var(--ap-sans);
+  font-size: var(--ap-caption-size);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+td {
+  padding: 0.45em 0.75em;
+  border: none;
+}
+tbody tr:not(:last-child) td { border-bottom: 1px solid var(--ap-rule-light); }
+caption,
+.markdown-rendered .table-caption {
+  caption-side: bottom;
+  font-size: var(--ap-caption-size);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ---------- Footnote-style links ---------- */
+a,
+.markdown-rendered a.internal-link,
+.markdown-rendered a.external-link {
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+  color: var(--link-color);
+}
+a:hover { border-bottom-style: solid; }
+.markdown-rendered a.internal-link.is-unresolved {
+  border-bottom: 1px dashed var(--link-unresolved-color);
+  color: var(--link-unresolved-color);
+}
+.markdown-preview-view .footnotes {
+  border-top: 1px solid var(--ap-rule-strong);
+  font-size: 0.88em;
+  margin-top: 2em;
+}
+
+/* ---------- Quotes ---------- */
+.markdown-rendered blockquote {
+  border: none;
+  border-left: 3px solid var(--ap-rule-strong);
+  font-style: italic;
+  padding: 0.2em 0 0.2em 1.2em;
+  margin: 1.2em 0;
+  color: var(--text-muted);
+}
+.markdown-rendered blockquote p:first-child::before { content: none; }
+
+/* ---------- Callouts: restraint, rule-based ---------- */
+.callout {
+  border: 1px solid var(--ap-rule-light);
+  border-left: 3px solid var(--ap-accent-current);
+  background: var(--background-primary-alt);
+  border-radius: 2px;
+  padding: 0;
+}
+.callout-title {
+  font-family: var(--ap-sans);
+  font-size: var(--ap-caption-size);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 0.5em 1em;
+}
+
+/* ---------- Code ---------- */
+code { font-family: var(--ap-mono); font-size: 0.88em; }
+.markdown-rendered :not(pre) > code {
+  background: var(--code-background);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+}
+.markdown-rendered pre {
+  background: var(--code-background);
+  border: 1px solid var(--ap-rule-light);
+  border-radius: 2px;
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/* ---------- Lists & tasks ---------- */
+.markdown-rendered ul { list-style: square; }
+.markdown-rendered .task-list-item-checkbox {
+  border: 1px solid var(--ap-rule-strong);
+  border-radius: 2px;
+  background: transparent;
+}
+.markdown-rendered .task-list-item-checkbox:checked {
+  background: var(--ap-accent-current);
+  border-color: var(--ap-accent-current);
+}
+
+/* ---------- Properties: citation front-matter ---------- */
+.metadata-container {
+  border: 1px solid var(--ap-rule-light);
+  border-radius: 2px;
+  background: var(--background-primary-alt);
+  padding: 0.6em 0.8em;
+  margin-bottom: 1.4em;
+}
+.metadata-property-key {
+  font-family: var(--ap-sans);
+  font-size: var(--ap-caption-size);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+.metadata-property-value { font-family: var(--ap-serif); }
+
+/* ---------- Navigation, tabs, search, settings ---------- */
+.nav-file-title, .nav-folder-title {
+  font-family: var(--ap-sans);
+  font-size: 0.86em;
+  border-radius: 2px;
+}
+.workspace-leaf-header-title, .workspace-tab-header {
+  font-family: var(--ap-sans);
+}
+.search-input-container input {
+  border: 1px solid var(--ap-rule-light);
+  border-radius: 2px;
+  background: var(--background-primary);
+}
+.search-result { font-family: var(--ap-serif); }
+.setting-item-name { font-family: var(--ap-sans); }
+button, .dropdown {
+  border-radius: 2px;
+  border: 1px solid var(--ap-rule-light);
+}
+
+/* ---------- Focus (visible, high-salience) ---------- */
+:is(a, button, .nav-file-title, .nav-folder-title, input, textarea,
+    .task-list-item-checkbox, .clickable-icon):focus-visible {
+  outline: 2px solid var(--background-modifier-border-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- Narrow windows (420px desktop reading) ---------- */
+@media (max-width: 600px) {
+  .inline-title { font-size: 1.65em; }
+  .markdown-preview-view h1,
+  .markdown-source-view.mod-cm6 .HyperMD-header-1 {
+    font-size: 1.45em;
+    letter-spacing: 0.035em;
+  }
+  .markdown-preview-view h2,
+  .markdown-source-view.mod-cm6 .HyperMD-header-2 { font-size: 1.14em; }
+  table { font-size: 0.9em; }
+  thead th, tbody td { padding-left: 0.45em; padding-right: 0.45em; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
